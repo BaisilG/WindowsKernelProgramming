@@ -11,6 +11,7 @@ void SampleUnload(_In_ PDRIVER_OBJECT DriverObject)
 void RTL_GET_VERSION()
 {
 	// Pointer to the RTL_OSVERSIONINFOW structure (which contains the members needed) is defined as lpVersionInformation
+	// As best practice, initializing all  structure members to 0 before use
 	PRTL_OSVERSIONINFOW lpVersionInformation = { 0 };
 
 	// "A caller specifies which input structure is being used by setting the dwOSVersionInfoSize member of the structure to the size in bytes of the structure that is used"
