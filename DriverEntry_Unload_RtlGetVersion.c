@@ -32,8 +32,6 @@ void RTL_GET_VERSION()
 	{
 		DbgPrint("Error calling RtlGetVersion()!\n");
 	}
-
-
 }
 
 NTSTATUS
