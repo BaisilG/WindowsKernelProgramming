@@ -18,11 +18,20 @@ void RTL_GET_VERSION()
 	lpVersionInformation->dwOSVersionInfoSize = sizeof(PRTL_OSVERSIONINFOW);
 
 	// RtlGetVersion needs a pointer to the PRTL_OSVERSIONINFOW structure
-	RtlGetVersion(&lpVersionInformation);
+	NTSTATUS Get_Version = RtlGetVersion(&lpVersionInformation);
 
-	// Printing the major version, minor version, and build number of the OS
-	// Since RtlGetVersion has ran, we can access the structures members to get the intended results
-	DbgPrint("Major version: %d, Minor version: %d, Build Number: %d\n", lpVersionInformation->dwMajorVersion, lpVersionInformation->dwMinorVersion, lpVersionInformation->dwBuildNumber);
+	// Error handling
+	if (Get_Version == STATUS_SUCCESS)
+	{
+		// Printing the major version, minor version, and build number of the OS
+		// Since RtlGetVersion has ran, we can access the structures members to get the intended results
+		DbgPrint("Major version: %d, Minor version: %d, Build Number: %d\n", lpVersionInformation->dwMajorVersion, lpVersionInformation->dwMinorVersion, lpVersionInformation->dwBuildNumber);
+	}
+	else
+	{
+		DbgPrint("Error calling RtlGetVersion()!\n")
+	}
+
 
 }
 
