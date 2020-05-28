@@ -29,7 +29,7 @@ void RTL_GET_VERSION()
 	}
 	else
 	{
-		DbgPrint("Error calling RtlGetVersion()!\n")
+		DbgPrint("Error calling RtlGetVersion()!\n");
 	}
 
 
