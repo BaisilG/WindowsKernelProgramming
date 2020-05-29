@@ -8,32 +8,6 @@ void SampleUnload(_In_ PDRIVER_OBJECT DriverObject)
 	DbgPrint("Driver1 driver unloaded!\n");
 }
 
-void RTL_GET_VERSION()
-{
-	// Pointer to the RTL_OSVERSIONINFOW structure (which contains the members needed) is defined as lpVersionInformation
-	// As best practice, initializing all  structure members to 0 before use
-	PRTL_OSVERSIONINFOW lpVersionInformation = { 0 };
-
-	// "A caller specifies which input structure is being used by setting the dwOSVersionInfoSize member of the structure to the size in bytes of the structure that is used"
-	// dwOSVersionInfoSize member must be set to the size of the structure before the function call
-	lpVersionInformation->dwOSVersionInfoSize = sizeof(PRTL_OSVERSIONINFOW);
-
-	// RtlGetVersion needs a pointer to the PRTL_OSVERSIONINFOW structure
-	NTSTATUS Get_Version = RtlGetVersion(&lpVersionInformation);
-
-	// Error handling
-	if (Get_Version == STATUS_SUCCESS)
-	{
-		// Printing the major version, minor version, and build number of the OS
-		// Since RtlGetVersion has ran, we can access the structures members to get the intended results
-		DbgPrint("Major version: %d, Minor version: %d, Build Number: %d\n", lpVersionInformation->dwMajorVersion, lpVersionInformation->dwMinorVersion, lpVersionInformation->dwBuildNumber);
-	}
-	else
-	{
-		DbgPrint("Error calling RtlGetVersion()!\n");
-	}
-}
-
 NTSTATUS
 DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
 {
@@ -46,12 +20,34 @@ DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
 	// Parameters need to be referenced to avoid errors
 	UNREFERENCED_PARAMETER(DriverObject);
 	UNREFERENCED_PARAMETER(RegistryPath);
-	
-	// Adding tracing
-	DbgPrint("Driver1 driver initialized successfully!\n"); 
 
 	// Calling RtlGetVersion function
-	void RTL_GET_VERSION();
+
+	// The RTL_OSVERSIONINFOW structure (which contains the members needed) is defined as lpVersionInformation
+	// As best practice, initializing all structure members to 0 before use
+	RTL_OSVERSIONINFOW lpVersionInformation = { 0 };
+
+	// "A caller specifies which input structure is being used by setting the dwOSVersionInfoSize member of the structure to the size in bytes of the structure that is used"
+	// dwOSVersionInfoSize member must be set to the size of the structure (RTL_OSVERSIONINFOW) before the function call
+	lpVersionInformation.dwOSVersionInfoSize = sizeof(RTL_OSVERSIONINFOW);
+
+	// RtlGetVersion needs a pointer to the PRTL_OSVERSIONINFOW structure (lpVersionInformation is already an alias to RTL_OSVERSIONINFOW, so using a pointer to lpVersionInformation)
+	NTSTATUS getVersion = RtlGetVersion(&lpVersionInformation);
+
+	// Error handling
+	if (getVersion == STATUS_SUCCESS)
+	{
+		// Printing the major version, minor version, and build number of the OS
+		// Since RtlGetVersion has ran, we can access the structures members to get the intended results
+		DbgPrint("Major version: %d, Minor version: %d, Build Number: %d\n", lpVersionInformation.dwMajorVersion, lpVersionInformation.dwMinorVersion, lpVersionInformation.dwBuildNumber);
+	}
+	else
+	{
+		DbgPrint("Error calling RtlGetVersion()!\n");
+	}
+
+	// Adding tracing
+	DbgPrint("Driver1 driver initialized successfully!\n"); 
 
 	return STATUS_SUCCESS;
 }
