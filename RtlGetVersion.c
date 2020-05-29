@@ -12,7 +12,7 @@ NTSTATUS
 DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
 {
 	// DriverObject is predefined
-	// -> is used to access what something points to (PDRIVER_OBJECT a.k.a DriverObject points to the DRIVER_OBJECT structure)
+	// -> is used to access a pointer to a structure (PDRIVER_OBJECT a.k.a DriverObject points to the DRIVER_OBJECT structure)
 	// Accessing DriverUnload member for unload routine
 	// Define unload routine before invoking DriverEntry code
 	DriverObject->DriverUnload = SampleUnload;
@@ -29,6 +29,7 @@ DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
 
 	// "A caller specifies which input structure is being used by setting the dwOSVersionInfoSize member of the structure to the size in bytes of the structure that is used"
 	// dwOSVersionInfoSize member must be set to the size of the structure (RTL_OSVERSIONINFOW) before the function call
+	// . is used to access a member of a structure directly
 	lpVersionInformation.dwOSVersionInfoSize = sizeof(RTL_OSVERSIONINFOW);
 
 	// RtlGetVersion needs a pointer to the PRTL_OSVERSIONINFOW structure (lpVersionInformation is already an alias to RTL_OSVERSIONINFOW, so using a pointer to lpVersionInformation)
